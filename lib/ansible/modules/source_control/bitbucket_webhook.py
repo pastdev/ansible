@@ -429,7 +429,7 @@ def run_module():
     result['existing'] = existing
 
     if (error):
-        module.fail_json(**result)
+        module.fail_json(msg=("Failed: %s" % json.dumps(error)))
     elif (state == 'absent'):
         if (existing == None):
             result['webhook'] = None
@@ -448,11 +448,12 @@ def run_module():
             result['method'] = 'delete'
     else:
         webhook = dict(
-            configuration=dict(secret=module.params['token']),
             events=module.params['events'],
             name=name,
             url=module.params['hook_url'],
         )
+        if (module.params['token']):
+            webhook['configuration'] = dict(secret=module.params['token'])
     
         if (existing == None):
             if (not module.check_mode):
