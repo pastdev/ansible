@@ -424,7 +424,7 @@ def run_module():
     bitbucket = Bitbucket(module)
 
     existing, error = find_webhook(bitbucket, project_identifier, repo, name)
-    if (existing != None):
+    if (existing != None and 'configuration' in existing and 'secret' in existing['configuration']):
         module.no_log_values.update([existing['configuration']['secret']])
     result['existing'] = existing
 
